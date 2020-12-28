@@ -25,8 +25,7 @@ public class Node {
 		label = ilabel;
 		parent = null;
 		all_labels = new int[n];
-		for (int i=0; i<n; i++)
-		{
+		for (int i=0; i<n; i++){
 			all_labels[i] = i;
 		}
 		branch_nodes = new ArrayList<Integer>();
@@ -91,20 +90,18 @@ public class Node {
 	 * The recursive function that expands the permutation tree
 	 * @return parent node
 	 */
-	public Node expand()
+	public void expand()
 	{
 		/* if leaf print branch and compute profit */	
 		if (unexplored.size() <= 0){
 			// print_vec(branch_nodes);
 			double bprofit = branch_profit();
 			total_profit += bprofit;
-		}
-		
+		}		
 		while (unexplored.size() > 0) {
 			Node nnode = next_node();	
 			nnode.expand();
 		}
-		return this.parent;
 	}
 	
 	/**

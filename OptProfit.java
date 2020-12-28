@@ -89,8 +89,7 @@ public class OptProfit {
 		int it = 1000;
 		int nprices = param.get_num_prices();
 		double neu = 0.01;
-		for (int i=0; i<it; i++)
-		{
+		for (int i=0; i<it; i++){
 			int idx = (int) (Math.random() * nprices); // random num
 			double grad = get_gradient(idx,param);
 			double[] tprices = param.get_prices();	
