@@ -2,6 +2,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
+/*
+ * Use OptParam to pass out prices and profit together and pass them all into the Node class
+ */
 
 public class OptProfit {
 	
@@ -18,7 +21,7 @@ public class OptProfit {
 	}
 	
 	/**
-	 * Loads parameters and starts the price optimization
+	 * Loads parameters and starts the price` optimization
 	 * @param args
 	 */
 	public static void main(String[] args)
@@ -26,15 +29,11 @@ public class OptProfit {
 		OptParam lparam = new OptParam();
 		try {
 			lparam = lparam.loadParams("param.txt");
-
 		} catch (Exception e) {
 			System.out.println("Failed to read parameters.");
 			e.printStackTrace();
 		}
 		OptProfit opt = new OptProfit(lparam);
-		System.out.println("Original prices: "+Arrays.toString(lparam.get_prices()));
-		double profit = opt.get_profit(lparam); 
-		System.out.println("Original profit: "+profit);
 		double[] oprices = opt.opt_prices();
 		System.out.println();
 		System.out.println("Optimized prices: "+Arrays.toString(oprices));
@@ -57,12 +56,11 @@ public class OptProfit {
 		if (last_profit < 0) {
 			last_profit = get_profit(param); 
 			param.set_profit(last_profit);
-		}		
+		}
+		
 		prices[i] += delta;
 		HashMap<String, Float> fmat = param.get_fmat();
-		int fsig = param.get_sigfig();
-		double falpha = param.get_alpha();
-		OptParam cparam = new OptParam(prices,fmat,fsig,falpha);
+		OptParam cparam = new OptParam(prices,fmat);
 		double test_profit = get_profit(cparam);
 		double grad = (test_profit - last_profit) / delta;
 
@@ -76,9 +74,9 @@ public class OptProfit {
 	 */
 	public double get_profit(OptParam cparam)
 	{	
-		Node root = new Node(0, cparam); 
+		Node root = new Node(0, cparam);
 		root.reset_total_profit();
-		root.expandTrunc();
+		root.expand();
 		return root.get_total_profit();
 	}
 
@@ -91,8 +89,7 @@ public class OptProfit {
 		int it = 1000;
 		int nprices = param.get_num_prices();
 		double neu = 0.01;
-		for (int i=0; i<it; i++)
-		{
+		for (int i=0; i<it; i++){
 			int idx = (int) (Math.random() * nprices); // random num
 			double grad = get_gradient(idx,param);
 			double[] tprices = param.get_prices();	
